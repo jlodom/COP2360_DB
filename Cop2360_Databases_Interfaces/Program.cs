@@ -13,13 +13,17 @@ namespace Cop2360_Databases_Interfaces {
 
 			/* Arguments */
 			String stringPathToInputFile = args[0];
-			String stringDatabasePathOrDatabaseServer = args[1];
+			String stringDatabaseName = args[1];
+			String stringDatabaseServer = args[2];
+			String stringDBUsername = args[3];
+			String stringDBPassword = args[4];
 
 
 			/* Create a Factory that can in turn create an object conforming to our interface. */
 			DBInterfaceExampleFactory factory = new DBInterfaceExampleFactory();
-			IDBInterfaceExample dblib = factory.CreateDBInterfaceExample((int)DBInterfaceExampleFactory.DBINTERFACETYPE.sqlite);
-			dblib.SetDBName(stringDatabasePathOrDatabaseServer);
+			IDBInterfaceExample dblib = factory.CreateDBInterfaceExample((int)DBInterfaceExampleFactory.DBINTERFACETYPE.mysql);
+			dblib.SetDBName(stringDatabaseName);
+			dblib.SetDBUsernamePasswordServer(stringDBUsername, stringDBPassword, stringDatabaseServer);
 			Console.WriteLine(dblib.GetDBName());
 
 
@@ -50,7 +54,7 @@ namespace Cop2360_Databases_Interfaces {
 						if(lineNumber == 1) {
 							String[] arrayStringTempHeader = stringLine.Split(charDelimiter);
 							foreach(String stringHeaderColumn in arrayStringTempHeader) {
-								listStringHeader.Add(stringHeaderColumn.Replace(' ', '_').Replace('/', '_').Trim().ToLower());
+								listStringHeader.Add(stringHeaderColumn.Replace(' ', 'z').Replace('/', 'z').Trim().ToLower());
 								/* We can dice the header string a lot in just one line (above). */
 							}
 						}
@@ -67,9 +71,11 @@ namespace Cop2360_Databases_Interfaces {
 						}
 					}
 				}
+				/* New code goes here again. By the end of the last code we had a header file, 
+ * and so we will use that to create a new table. */
+				dblib.CreateATable("FROMFILE", listStringHeader);
 			}
-			/* New code goes here again. */
-
+			// CREATE TABLE tablename ( candidatezcommittee varchar, date varchar, amount varchar, typ varchar, contributorzname varchar, address varchar, cityzstatezzip varchar, occupation varchar, inkindzdesc varchar);
 		}
 	}
 }
